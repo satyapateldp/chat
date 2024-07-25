@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF QA Chatbot</title>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+    <nav>
+        <h2>PDF QA Chatbot</h2>
+    </nav>
+    <div class="container">
+        <div class="column">
+            <h3>Upload PDF and Ask Question</h3>
+            <form id="qa-form" method="post" enctype="multipart/form-data">
+                <label for="question">Question:</label>
+                <input type="text" id="question" name="question" required>
+                <label for="pdf_file">Upload PDF:</label>
+                <input type="file" id="pdf_file" name="pdf_file" accept="application/pdf" required>
+                <button type="submit">Ask</button>
+            </form>
+        </div>
+        <div class="column">
+            <h3>Answer</h3>
+            <div id="answer"></div>
+        </div>
+    </div>
+    <script>
+        document.getElementById('qa-form').addEventListener('submit', async function(event) {
+            event.preventDefault();
+            const formData = new FormData(event.target);
+            const response = await fetch('/ask', {
+                method: 'POST',
+                body: formData,
+            });
+            const result = await response.json();
+            document.getElementById('answer').textContent = result.answer || result.error;
+        });
+    </script>
+</body>
+</html>
